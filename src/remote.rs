@@ -21,7 +21,11 @@ impl RemoteFeed {
 
     /// Attempts to fetch and parse feed from the given url
     pub async fn try_new(url: &str) -> Result<Either<Self, Vec<String>>> {
-        let bytes = surf::get(url).await?.body_bytes().await?;
+        let req = surf::get(url);
+        let client = surf::client()
+            .with(surf::middleware::Redirect::default());
+
+        let bytes = client.send(req).await?.body_bytes().await?;
         match feed_rs::parser::parse(&bytes[..]) {
             Ok(feed) => Ok(Either::Left(RemoteFeed {
                 url: url.to_owned(),

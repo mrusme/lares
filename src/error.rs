@@ -32,7 +32,7 @@ pub enum Error {
     R2D2Error(#[from] r2d2::Error),
 
     #[error("HTTP error")]
-    SurfError(#[from] surf::Exception),
+    SurfError(#[from] surf::Error),
 
     #[error("IO error")]
     IOError(#[from] std::io::Error),
